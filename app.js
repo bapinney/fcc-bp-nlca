@@ -8,6 +8,7 @@ var bodyParser = require('body-parser');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
+var port = process.env.PORT || 8080;
 var app = express();
 
 // view engine setup
@@ -56,5 +57,9 @@ app.use(function(err, req, res, next) {
   });
 });
 
+//*** Routes are in /routes/index.js ***
+app.listen(port, function() {
+    console.log("Listening on port " + port + ".");
+})
 
 module.exports = app;
