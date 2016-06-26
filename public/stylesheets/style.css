@@ -1,8 +1,27 @@
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+    background-color: rgb(50,50,50);
+    color: white;
+    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
-
+.main-container {
+    background-color: rgba(0,0,50,1);
+    border-radius: 15px;
+    box-shadow: inset 0px 0px 20px 20px rgba(30,30,30,0.6);
+    color: white;
+    min-height: 800px;
+    padding: 20px;
+}
+#header-div h1 {
+    text-shadow: 2px 2px 2px black;
+}
+#header-div {
+    background-image: url("/images/people-party-dancing-music-1280.jpg");
+    background-position: 0px -300px;
+    border-radius: 20px;
+    box-shadow: inset 0px 0px 5px 5px rgb(0,0,50);
+    padding: 10px;
+    text-shadow: 2px 2px 2px black;
+}
 a {
-  color: #00B7FF;
+    color: #00B7FF;
 }

@@ -1,3 +1,7 @@
+var chalk = require('chalk');
+console.log(chalk.bgBlack.white("Starting app..."));
+
+console.log(chalk.bgYellow.black("Loading packages..."));
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -5,18 +9,21 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
+console.log(chalk.bgYellow.black("Loading routes..."));
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
+console.log(chalk.bgYellow.black("Loading settings..."));
 var port = process.env.PORT || 8080;
 var app = express();
+app.locals.title = "freeCodeCamp Nightlife Coordination App"
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+app.set('view engine', 'pug');
 
 // uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(favicon(path.join(__dirname, 'public/images', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
