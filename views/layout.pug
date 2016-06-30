@@ -3,12 +3,21 @@ html
     head
         title freeCodeCamp Nightlife Coordination App
         link(rel="stylesheet" href="/stylesheets/bootstrap.css")
+        link(href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css", rel="stylesheet", integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1", crossorigin="anonymous")
         //-Remember to load our own CSS AFTER Bootstrap so we can override it.
         link(rel='stylesheet', href='/stylesheets/style.css')
+        script(src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js")
+        script(src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.3.1/angular-ui-router.min.js")
         script(src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js")
         script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous")
+        script(src="/javascript/script.js")
         //-Favicon
         link(rel="icon" href="/images/favicon.ico" type="image/x-icon")
 body
-    main(class="container main-container") 
+    header(id="main-header")
+        h1= title
+            i(class="fa fa-glass header-icon" aria-hidden="true")
+        div Powered by Yelp 
+            i(class="fa fa-yelp yelp-icon" aria-hidden="true")
+    main(class="container" id="main-container" ng-app="fcc-bp-nlca") 
         block content

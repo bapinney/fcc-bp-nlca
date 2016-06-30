@@ -1,6 +1,9 @@
 extends layout
 
 block content
-  div(id="header-div")
-      h1= title
-      p Welcome to #{title}
+    div(class="cbh-section") 
+        div Enter your zip code to find restaurants and bars near you
+        input(id="search-box" type="text")
+        span(id="gps-icon")
+            i(class="fa fa-crosshairs" aria-hidden="true" data-toggle="tooltip" data-placement="top" id="get-location" title="Use my current location")
+        input(id="search-button" type="button" value="Search")

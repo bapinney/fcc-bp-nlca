@@ -3,7 +3,7 @@ body {
     color: white;
     font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
-.main-container {
+#main-container {
     background-color: rgba(0,0,50,1);
     border-radius: 15px;
     box-shadow: inset 0px 0px 20px 20px rgba(30,30,30,0.6);
@@ -11,12 +11,21 @@ body {
     min-height: 800px;
     padding: 20px;
 }
+#main-header {
+    margin: 10px auto 10px auto;
+    padding-left: 20px;
+    width: 1170px;
+}
+.header-icon {
+    color: hsl(200, 100%, 70%);
+    margin-left: 20px;
+    text-shadow: 0px 0px 15px rgb(0,100,200);
+    transform: rotate(15deg);
+}
 #header-div h1 {
-    text-shadow: 2px 2px 2px black;
+    text-shadow: 2px 2px 12px rgb(0,100,200);
 }
 #header-div {
-    background-image: url("/images/people-party-dancing-music-1280.jpg");
-    background-position: 0px -300px;
     border-radius: 20px;
     box-shadow: inset 0px 0px 5px 5px rgb(0,0,50);
     padding: 10px;
@@ -24,4 +33,32 @@ body {
 }
 a {
     color: #00B7FF;
+}
+/* Section centered in the head of the MAIN element */ 
+.cbh-section {
+    text-align: center;
+}
+#gps-icon {
+    color: black;
+    cursor: pointer;
+    display: none; /* Gets overridden if we have geolocation */
+    font-size: 19px;
+    margin-left: -29px;
+}
+#search-box {
+    border-radius: 6px;
+    margin: 10px;
+}
+#search-button {
+    background-color: hsl(100,100%,30%);
+    border-color: hsl(100,100%,35%);
+    color: white;
+    margin-left: 10px;
+}
+#search-button:hover {
+    background-color: hsl(200, 100%, 30%);
+    border-color: hsl(200, 100%, 35%);
+}
+input[type="button"] {
+    border-radius: 6px;
 }
