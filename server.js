@@ -9,6 +9,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
+var yelp = require('yelp');
 
 console.log(chalk.bgYellow.black("Loading routes..."));
 var routes = require('./routes/index');
@@ -32,7 +33,21 @@ if (typeof process.env.YELP_CONSUMER_KEY == "undefined") {
         process.exit();
     }
 }
-console.log(chalk.bgGreen.black("Environment found"));
+
+console.log(chalk.bgGreen.black("Environment found."));
+console.log("Checking for Yelp API settings...");
+if (typeof process.env.YELP_CONSUMER_KEY != "string"    ||
+    typeof process.env.YELP_CONSUMER_SECRET != "string" ||
+    typeof process.env.YELP_TOKEN != "string"           ||
+    typeof process.env.YELP_TOKEN_SECRET != "string") 
+{
+    console.log(chalk.bgRed.black("Required Yelp settings missing.  Exiting..."));
+    process.exit();
+}
+else {
+    console.log(chalk.bgGreen.black("All Yelp settings defined."));
+}
+
 
 // view engine setup
 console.log(chalk.bgYellow.black("Loading view engine and views..."));
