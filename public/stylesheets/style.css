@@ -54,27 +54,54 @@ a {
     border: none;
     margin-left: 4px;
 }
-#search-button {
+
+.search-button {
     background-color: hsl(100,100%,30%);
     border-color: hsl(100,100%,35%);
     color: white;
     display: inline-flex;
     margin-left: 6px;
-    transition-duration: 1s;
+    transition-duration: 500ms;
     transition-property: all;
     vertical-align: middle;
 }
-#search-button:disabled {
+.search-button:disabled {
     background-color: hsl(50,10%,30%);
     border-color: hsl(50,10%,35%);
     color: grey;
     transition-duration: 1s;
     transition-property: all;
 }
-#search-button:enabled:hover {
+.search-button:enabled:hover {
     background-color: hsl(50, 100%, 30%);
     border-color: hsl(50, 100%, 35%);
 }
+
+/* TODO: Maybe convert this stylesheet to SASS, so it will be easier to manage */
+/* This class is used by jQuery to simulate being clicked when the user hits return in the text box */
+.search-button-active {
+    background-color: hsl(200, 100%, 35%);;
+    border-color: hsl(200, 100%, 35%);
+    color: white;
+    display: inline-flex;
+    margin-left: 6px;
+    transition-duration: 500ms;
+    transition-property: all;
+    vertical-align: middle;
+}
+
+/* :active is tied over :hover so that the :hover (non-active) state above does not override our hover active rule below... */
+.search-button:enabled:hover:active {
+    background-color: hsl(200, 100%, 35%);;
+    border-color: hsl(200, 100%, 35%);
+    color: white;
+    display: inline-flex;
+    margin-left: 6px;
+    transition-duration: 500ms;
+    transition-property: all;
+    vertical-align: middle;
+}
+
 #search-span {
     background-color: rgb(255, 255, 255);
     border-color: rgb(238, 238, 238);

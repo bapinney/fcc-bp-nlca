@@ -9,11 +9,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
-var yelp = require('yelp');
-
-console.log(chalk.bgYellow.black("Loading routes..."));
-var routes = require('./routes/index');
-var users = require('./routes/users');
+var Yelp = require('yelp');
 
 console.log(chalk.bgYellow.black("Loading settings..."));
 var port = process.env.PORT || 8080;
@@ -35,7 +31,7 @@ if (typeof process.env.YELP_CONSUMER_KEY == "undefined") {
 }
 
 console.log(chalk.bgGreen.black("Environment found."));
-console.log("Checking for Yelp API settings...");
+console.log("Checking for " + chalk.bgRed.white("Yelp API") + " settings...");
 if (typeof process.env.YELP_CONSUMER_KEY != "string"    ||
     typeof process.env.YELP_CONSUMER_SECRET != "string" ||
     typeof process.env.YELP_TOKEN != "string"           ||
@@ -45,7 +41,11 @@ if (typeof process.env.YELP_CONSUMER_KEY != "string"    ||
     process.exit();
 }
 else {
+    // The Yelp settings must be defined BEFORE require()ing the routes, as the routes use those settings.
     console.log(chalk.bgGreen.black("All Yelp settings defined."));
+    console.log(chalk.bgYellow.black("Loading routes..."));
+    var routes = require('./routes/index');
+    var users = require('./routes/users');
 }
 
 
