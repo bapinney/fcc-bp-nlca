@@ -11,4 +11,9 @@ router.get('/', function (req, res, next) {
     });
 });
 
+router.post('/search', function(req, res, next) {
+    console.dir(req);
+    res.json({result: "success"});
+});
+
 module.exports = router;
