@@ -31,6 +31,9 @@ body {
     padding: 10px;
     text-shadow: 2px 2px 2px black;
 }
+#instructions {
+    margin-bottom: 5px;
+}
 a {
     color: #00B7FF;
 }
@@ -43,21 +46,44 @@ a {
     cursor: pointer;
     display: none; /* Gets overridden if we have geolocation */
     font-size: 19px;
-    margin-left: -29px;
+    margin-left: 4px;
+    margin-right: 4px;
 }
 #search-box {
     border-radius: 6px;
-    margin: 10px;
+    border: none;
+    margin-left: 4px;
 }
 #search-button {
     background-color: hsl(100,100%,30%);
     border-color: hsl(100,100%,35%);
     color: white;
-    margin-left: 10px;
+    display: inline-flex;
+    margin-left: 6px;
+    transition-duration: 1s;
+    transition-property: all;
+    vertical-align: middle;
 }
-#search-button:hover {
-    background-color: hsl(200, 100%, 30%);
-    border-color: hsl(200, 100%, 35%);
+#search-button:disabled {
+    background-color: hsl(50,10%,30%);
+    border-color: hsl(50,10%,35%);
+    color: grey;
+    transition-duration: 1s;
+    transition-property: all;
+}
+#search-button:enabled:hover {
+    background-color: hsl(50, 100%, 30%);
+    border-color: hsl(50, 100%, 35%);
+}
+#search-span {
+    background-color: rgb(255, 255, 255);
+    border-color: rgb(238, 238, 238);
+    border-radius: 6px;
+    box-shadow: 2px 2px grey;
+    display: inline-flex;
+    height: 26px;
+    vertical-align: middle;
+    width: auto;
 }
 input[type="button"] {
     border-radius: 6px;
