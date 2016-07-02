@@ -33,6 +33,43 @@ $(function () {
             $("#search-button").trigger("click");
         }
     });
+    
+    var getClassForStars = function(nStars) {
+        switch(nStars) {
+            case 0:
+                return "star-img stars_0";
+                break;
+            case 1:
+                return "star-img stars_1";
+                break;
+            case 1.5:
+                return "star-img stars_1_half";
+                break;
+            case 2:
+                return "star-img stars_2";
+                break;
+            case 2.5:
+                return "star-img stars_2_half";
+                break;
+            case 3:
+                return "star-img stars_3";
+                break;
+            case 3.5:
+                return "star-img stars_3_half";
+                break;
+            case 4:
+                return "star-img stars_4";
+                break;
+            case 4.5:
+                return "star-img stars_4_half";
+                break;
+            case 5:
+                return "star-img stars_5
+                break;
+            default:
+                console.error("Unexpected value for nStars: " + nStars);
+        }
+    }
 
     $("#search-button").click(function () {
         var searchQuery = $("#search-box")[0].value;

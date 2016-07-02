@@ -11,7 +11,6 @@ var yelp = new Yelp({
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
-    console.dir(testObj);
     res.render('index', function (err, html) {
         if (err) {
             console.error(err);

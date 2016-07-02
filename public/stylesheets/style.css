@@ -16,10 +16,59 @@ body {
     padding-left: 20px;
     width: 1170px;
 }
+@keyframes hues {
+    0% {
+        color: hsl(216, 100%, 70%);
+        text-shadow: 0px 0px 15px hsl(216, 100%, 41.2%);
+    }
+    10% {
+        color: hsl(252, 100%, 70%);
+        text-shadow: 0px 0px 15px hsl(252, 100%, 41.2%);
+    }
+    20% {
+        color: hsl(288, 100%, 70%);
+        text-shadow: 0px 0px 15px hsl(288, 100%, 41.2%);
+    }
+    30% {
+        color: hsl(324, 100%, 70%);
+        text-shadow: 0px 0px 15px hsl(324, 100%, 41.2%);
+    }
+    40% {
+        color: hsl(0, 100%, 70%);
+        text-shadow: 0px 0px 15px hsl(0, 100%, 41.2%);
+    }
+    50% {
+        color: hsl(36, 100%, 70%);
+        text-shadow: 0px 0px 15px hsl(36, 100%, 41.2%);
+    }
+    60% {
+        color: hsl(72, 100%, 70%);
+        text-shadow: 0px 0px 15px hsl(72, 100%, 41.2%);
+    }
+    70% {
+        color: hsl(108, 100%, 70%);
+        text-shadow: 0px 0px 15px hsl(108%, 100%, 41.2%);
+    }
+    80% {
+        color: hsl(144, 100%, 70%);
+        text-shadow: 0px 0px 15px hsl(144, 100%, 41.2%);
+    }
+    90% {
+        color: hsl(180, 100%, 70%);
+        text-shadow: 0px 0px 15px hsl(180, 100%, 41.2%);
+    }
+    100% {
+        color: hsl(216, 100%, 70%);
+        text-shadow: 0px 0px 15px hsl(216, 100%, 41.2%);
+    }
+}
 .header-icon {
+    animation-duration: 60s;
+    animation-name: hues;
+    animation-iteration-count: infinite;
     color: hsl(200, 100%, 70%);
     margin-left: 20px;
-    text-shadow: 0px 0px 15px rgb(0,100,200);
+    text-shadow: 0px 0px 15px hsl(200, 100%, 41.2%);
     transform: rotate(15deg);
 }
 #header-div h1 {
@@ -34,11 +83,17 @@ body {
 #instructions {
     margin-bottom: 5px;
 }
+#results-table {
+    border: 1px dotted black;
+    width: 100%;
+}
 a {
     color: #00B7FF;
 }
 /* Section centered in the head of the MAIN element */ 
 .cbh-section {
+    margin-bottom: 10px;
+    padding: 10px;
     text-align: center;
 }
 #gps-icon {
@@ -114,4 +169,81 @@ a {
 }
 input[type="button"] {
     border-radius: 6px;
+}
+
+.listing-desc {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.listing-image {
+    display: inline-block;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+.listing-image img {
+    border-radius: 4px;
+    box-shadow: 2px 2px 2px black;
+}
+
+.listing-name {
+    color: lightskyblue;
+    font-family: "Trebuchet MS";
+    font-size: 20px;
+    letter-spacing: 2px;
+    margin: 10px auto 0px 10px;
+    text-shadow: 0px -1px 2px rgba(100, 155, 255, .75);
+}
+
+.rating {
+    overflow: hidden;
+    position: relative;
+    width: 106px;
+    height: 18px;
+}
+
+.stars_0 {
+    background-position: -3px -514px;
+}
+.stars_1 {
+    background-position: -3px -539px;
+}
+.stars_1_half {
+    background-position: -3px -564px;
+}
+.stars_2 {
+    background-position: -3px -589px;
+}
+.stars_2_half {
+    background-position: -3px -614px;
+}
+.stars_3 {
+    background-position: -3px -639px;
+}
+.stars_3_half {
+    background-position: -3px -664px;
+}
+.stars_4 {
+    background-position: -3px -689px;
+}
+.stars_4_half {
+    background-position: -3px -714px;
+}
+.stars_5 {
+    background-position: -3px -739px;
+}
+.star-img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: url('/images/stars_map_www.png');
+}
+
+#results-table hr {
+    /* background-image: linear-gradient(to right, hsl(50, 100, 75), hsl(100, 100, 75) 33%, hsl(200, 100, 75) 66%); */
+    background-image: linear-gradient(to right, hsl(100, 100%, 75%), hsl(150, 100%, 75%) 33%, hsl(200, 100%, 75%) 66%);
+    height: 1px;
+    margin-top: 0px;
 }
