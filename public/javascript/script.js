@@ -64,12 +64,12 @@ $(function () {
                 return "star-img stars_4_half";
                 break;
             case 5:
-                return "star-img stars_5
+                return "star-img stars_5";
                 break;
             default:
                 console.error("Unexpected value for nStars: " + nStars);
         }
-    }
+    };
 
     $("#search-button").click(function () {
         var searchQuery = $("#search-box")[0].value;
