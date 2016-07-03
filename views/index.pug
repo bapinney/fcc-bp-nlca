@@ -4,7 +4,7 @@ block content
     div(class="cbh-section") 
         div(id="instructions") Enter your location to find restaurants and bars near you
         span(id="search-span")
-            input(id="search-box" type="text")
+            input(id="search-box" type="text" accesskey="s" title="Search - Ctrl+[Alt+]s")
             span(id="gps-icon")
                 i(class="fa fa-crosshairs" aria-hidden="true" data-toggle="tooltip" data-placement="top" id="get-location" title="Use my current location")
         input(id="search-button" class="search-button" type="button" value="Search" disabled)
@@ -18,7 +18,7 @@ block content
                         div(class="listing-image")
                             img(src="https://s3-media4.fl.yelpcdn.com/bphoto/h6eXMAdFgf0INZpYeiygFQ/ms.jpg")
                         div(class="listing-desc")
-                            div(class="rating")
-                                img(src="https://s3-media4.fl.yelpcdn.com/assets/2/www/img/f62a5be2f902/ico/stars/v1/stars_small_4.png")
-                            span description
-                        
+                            div(class="ratings-div")
+                                i(class="star-img stars_4_half")
+                            div(class="desc-div") description
+                            div(class="patrons-div") info here

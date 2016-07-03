@@ -16,6 +16,22 @@ body {
     padding-left: 20px;
     width: 1170px;
 }
+
+@keyframes gpsFetch {
+    0% { 
+        box-shadow: 0px 0px 10px 10px hsla(200, 100%, 70%, 1);
+    }
+    100% {
+        box-shadow: 0px 0px 0px 0px hsla(200, 100%, 70%, 0);
+    }
+}
+
+.gpsFetch {
+    animation-duration: 10s;
+    animation-name: gpsFetch;
+    animation-iteration-count: 1;
+}
+
 @keyframes hues {
     0% {
         color: hsl(216, 100%, 70%);
@@ -84,7 +100,8 @@ body {
     margin-bottom: 5px;
 }
 #results-table {
-    border: 1px dotted black;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px 2px rebeccapurple;
     width: 100%;
 }
 a {
@@ -104,6 +121,12 @@ a {
     margin-left: 4px;
     margin-right: 4px;
 }
+
+.guests-div {
+    bottom: 0;
+    position: relative;
+}
+
 #search-box {
     border-radius: 6px;
     border: none;
@@ -172,7 +195,10 @@ input[type="button"] {
 }
 
 .listing-desc {
-    display: inline-block;
+    display: inline-table;
+    height: 100px;
+    margin-left: 10px;
+    max-width: 800px;
     vertical-align: top;
 }
 
@@ -204,41 +230,69 @@ input[type="button"] {
     height: 18px;
 }
 
-.stars_0 {
-    background-position: -3px -514px;
+.ratings-div {
+    overflow: hidden;
+    position: relative;
+    width: 106px;
+    height: 18px;
 }
-.stars_1 {
-    background-position: -3px -539px;
+
+/* Note: .ratings-div is prefixed in these classes to give it a higher specificity */
+.ratings-div .stars_0 {
+    background-position: -3px -303px;
 }
-.stars_1_half {
-    background-position: -3px -564px;
+.ratings-div .stars_1 {
+    background-position: -3px -324px;
 }
-.stars_2 {
-    background-position: -3px -589px;
+.ratings-div .stars_1_half {
+    background-position: -3px -345px;
 }
-.stars_2_half {
-    background-position: -3px -614px;
+.ratings-div .stars_2 {
+    background-position: -3px -366px;
 }
-.stars_3 {
-    background-position: -3px -639px;
+.ratings-div .stars_2_half {
+    background-position: -3px -387px;
 }
-.stars_3_half {
-    background-position: -3px -664px;
+.ratings-div .stars_3 {
+    background-position: -3px -408px;
 }
-.stars_4 {
-    background-position: -3px -689px;
+.ratings-div .stars_3_half {
+    background-position: -3px -429px;
 }
-.stars_4_half {
-    background-position: -3px -714px;
+.ratings-div .stars_4 {
+    background-position: -3px -450px;
 }
-.stars_5 {
-    background-position: -3px -739px;
+.ratings-div .stars_4_half {
+    background-position: -3px -471px;
+}
+.ratings-div .stars_5 {
+    background-position: -3px -492px;
 }
 .star-img {
     display: block;
     width: 100%;
     height: 100%;
-    background: url('/images/stars_map_www.png');
+    background: url('/images/review_stars/stars_map.png') no-repeat;
+}
+
+.listing-desc {
+    position: relative;
+}
+
+.ratings-div {
+    overflow: hidden;
+    position: relative;
+    width: 106px;
+    height: 18px;
+}
+
+.desc-div {
+    height: 50px;
+}
+
+.patrons-div {
+    bottom: 0;
+    position: absolute;
 }
 
 #results-table hr {

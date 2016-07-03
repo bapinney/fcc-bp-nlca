@@ -7,12 +7,24 @@ $(function () {
         console.log("Geolocation supported");
         $("#gps-icon")[0].style.display = "inline";
     }
+    
+    var gpsAnimEnd = function(e) {
+        if (e.type == "animationend") {
+            $("#search-box").removeClass("gpsFetch");
+        }
+    }
+    
+    document.getElementById("search-box").addEventListener("animationend", gpsAnimEnd, false);
+    
     $("#get-location").click(function () {
+        $("#search-box").addClass("gpsFetch");
         navigator.geolocation.getCurrentPosition(function (position) {
-            console.log(position.coords.latitude, position.coords.longitude);
+            $("#get-location").fadeOut();
+            //console.log(position.coords.latitude, position.coords.longitude);
             currentPos = position.coords.latitude.toFixed(5) + ", " + position.coords.longitude.toFixed(5);
             console.log(currentPos);
             $("#search-box")[0].value = currentPos;
+            
             //Fire the input trigger for the search box since it will not fire if data is programmatically inputted.  
             $("#search-box").trigger("input");
         });
@@ -79,10 +91,69 @@ $(function () {
         $.ajax({
             method: "POST",
             url: "/search",
-            data: { query: searchQuery }
+            data: {
+                query: searchQuery
+            }
         })
-        .done(function(res) {
-           console.dir(res); 
+        .done(function (res) {
+            console.dir(res);
+            displayResults(res);
         });
     });
+    
+    var displayResults = function(res) {
+        console.log("dl called");
+        
+        var resTable = $("#results-table");
+        for (var i=0; i < 3; i++) {
+            var listingName = res.businesses[i].name;
+            var listingRating = res.businesses[i].rating;
+            var listingImg = res.businesses[i].image_url;
+            var listingDesc = res.businesses[i].snippet_text;
+            var infoHT = "patron info here";
+            var row = $("<tr></tr>");
+            var cell = $("<td></td>");
+            var lnDiv = $("<div></div>");
+            
+            lnDiv.addClass("listing-name");
+            lnDiv.text(listingName);
+            
+            var hr = $("<hr>");
+            
+            var liDiv = $("<div></div>");
+            liDiv.addClass("listing-image");
+            var liImg = $("<img>");
+            liImg.attr("src", listingImg);
+            liDiv.append(liImg);
+            
+            var liRatingDiv = $("<div></div>");
+            liRatingDiv.addClass("ratings-div");
+            var liRatingI = $("<i></i>");
+            var ratingClass = "stars_" + Math.floor(listingRating);
+            if (listingRating % 1 == 0.5) {
+                ratingClass += "_half";
+            }
+            liRatingI.addClass("star-img " + ratingClass);
+            liRatingDiv.append(liRatingI);
+            
+            var liListingDescDiv = $("<div></div>");
+            liListingDescDiv.addClass("listing-desc");
+            
+            var liDescDiv = $("<div></div>");
+            liDescDiv.addClass("desc-div");
+            liDescDiv.text(listingDesc);
+            
+            var patronsDiv = $("</div></div>");
+            patronsDiv.text("Patron info here");
+            
+            liListingDescDiv.append(liRatingDiv).append(liDescDiv);
+            
+            cell.append(lnDiv).append(hr).append(liDiv).append(liListingDescDiv);
+            
+            row.append(cell);
+            
+            resTable.append(row);
+        }
+    }
+    
 });
