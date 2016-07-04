@@ -1,7 +1,8 @@
 angular.module("fcc-bp-nlca", ['ui.router']);
 
 var currentPos;
-$(function () {
+
+$(function () { //Document Ready
     $('[data-toggle="tooltip"]').tooltip();
     if ("geolocation" in navigator) {
         console.log("Geolocation supported");
@@ -14,7 +15,15 @@ $(function () {
         }
     }
     
+    var enterSearchUIFeedback = function(e) {
+        if (e.type == "animationend") {
+            $("#search-button").removeClass("enterKeyFB");
+        }
+    }
+    
     document.getElementById("search-box").addEventListener("animationend", gpsAnimEnd, false);
+    
+    document.getElementById("search-box").addEventListener("animationend", enterSearchUIFeedback, false);
     
     $("#get-location").click(function () {
         $("#search-box").addClass("gpsFetch");
@@ -43,7 +52,16 @@ $(function () {
     $("#search-box").keypress(function (event) {
         if (event.keyCode == 13) { //Enter
             $("#search-button").trigger("click");
+            $("#search-button").addClass("enterKeyFB");
         }
+    });
+    
+    $("#search-box").focusin(function() {
+        $("#search-span").addClass("sb-focus");
+    });
+    
+    $("#search-box").focusout(function() {
+       $("#search-span").removeClass("sb-focus"); 
     });
     
     var getClassForStars = function(nStars) {
@@ -102,7 +120,8 @@ $(function () {
     });
     
     var displayResults = function(res) {
-        console.log("dl called");
+        //Remove any previous results before displaying new ones...
+        $("#results-table tbody").empty();
         
         var resTable = $("#results-table");
         for (var i=0; i < 3; i++) {
@@ -110,13 +129,21 @@ $(function () {
             var listingRating = res.businesses[i].rating;
             var listingImg = res.businesses[i].image_url;
             var listingDesc = res.businesses[i].snippet_text;
+            var listingUrl = res.businesses[i].url;
+            var listingId = res.businesses[i].id;
+            
             var infoHT = "patron info here";
             var row = $("<tr></tr>");
             var cell = $("<td></td>");
             var lnDiv = $("<div></div>");
             
             lnDiv.addClass("listing-name");
-            lnDiv.text(listingName);
+            
+            var lnA = $("<a></a>");
+            lnA.attr("href", listingUrl);
+            lnA.text(listingName);
+            
+            lnDiv.append(lnA);
             
             var hr = $("<hr>");
             
@@ -145,7 +172,11 @@ $(function () {
             
             var patronsDiv = $("<div></div>");
             patronsDiv.addClass("patrons-div");
-            patronsDiv.text("Patron info here");
+            
+            var patronsButton = $("<button></button>");
+            patronsButton.attr("data-listing-id", listingId);
+            patronsButton.text("Dummy text");
+            patronsDiv.append(patronsButton);
             
             liListingDescDiv.append(liRatingDiv).append(liDescDiv);
             console.log("Appending patrons div");
