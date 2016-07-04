@@ -231,6 +231,7 @@ input[type="button"] {
 }
 
 .ratings-div {
+    margin-bottom: 8px;
     overflow: hidden;
     position: relative;
     width: 106px;

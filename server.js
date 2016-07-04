@@ -3,12 +3,16 @@ console.log(chalk.bgBlack.white("Starting app..."));
 
 console.log(chalk.bgYellow.black("Loading packages..."));
 var express = require('express');
+var session = require('express-session');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
+var passport = require('passport');
+var uuid = require('uuid');
+var TwitterStrategy = require('passport-twitter').Strategy;
 var Yelp = require('yelp');
 
 console.log(chalk.bgYellow.black("Loading settings..."));
@@ -41,13 +45,105 @@ if (typeof process.env.YELP_CONSUMER_KEY != "string"    ||
     process.exit();
 }
 else {
-    // The Yelp settings must be defined BEFORE require()ing the routes, as the routes use those settings.
     console.log(chalk.bgGreen.black("All Yelp settings defined."));
-    console.log(chalk.bgYellow.black("Loading routes..."));
-    var routes = require('./routes/index');
-    var users = require('./routes/users');
 }
 
+console.log("Checking for " + chalk.bgBlue.white("Twitter API") + " settings...");
+if (typeof process.env.TWITTER_CONSUMER_KEY != "string"    ||
+    typeof process.env.TWITTER_CONSUMER_SECRET != "string" ||
+    typeof process.env.CALLBACK_URI != "string") 
+{
+    console.log(chalk.bgRed.black("Required Twitter settings missing.  Exiting..."));
+    process.exit();
+}
+else {
+    console.log(chalk.bgGreen.black("All Twitter settings defined."));
+}
+
+console.log("Initializing " + chalk.bgGreen.white("Passport") + "...");
+TWITTER_CONSUMER_KEY = process.env.TWITTER_CONSUMER_KEY;
+TWITTER_CONSUMER_SECRET = process.env.TWITTER_CONSUMER_SECRET;
+CALLBACK_URI = process.env.CALLBACK_URI;
+
+app.use(session({
+    genid: function (req) {
+        return uuid.v4(); // 'uuid' module
+    },
+    resave: true,
+    saveUninitialized: true,
+    secret: 'tacos'
+}));
+
+app.use(passport.initialize());
+app.use(passport.session()); //Passport piggybacks off the Express session (above)
+
+//Passport serialization and deserialization -- (move to another file, once working, and add lookup/insertion from Mongo)
+passport.serializeUser(function (user, done) {
+    done(null, user);
+});
+passport.deserializeUser(function (obj, done) {
+    done(null, obj);
+})
+
+passport.use(new TwitterStrategy({
+        consumerKey: TWITTER_CONSUMER_KEY,
+        consumerSecret: TWITTER_CONSUMER_SECRET,
+        callbackURL: CALLBACK_URI,
+        passReqToCallback: true //Allows stuff like username to be in the req
+    },
+    function (req, token, tokenSecret, profile, callback) {
+        /*  Properties we care about:
+            id, token, name, screen_name, location, description
+            All but ID are strings */
+
+        process.nextTick(function () { //Asynchronous
+
+            //Find or Create
+            console.log(chalk.bgBlack.yellow("Searching for user ID ") + profile.id);
+            User.findOne({
+                    provider: "twitter",
+                    id      : profile.id
+                },
+                function (err, user) {
+                    console.log(chalk.bgBlack.yellow("User callback"));
+                    if (err) {
+                        console.log(chalk.bgBlack.red("Error: " + err));
+                        callback(err);
+                    }
+                    if (user) { //We found the user
+                        console.log(chalk.bgBlack.green("User found"));
+                        return callback(null, user);
+                    } else { //User does not exist
+                        console.log(chalk.bgWhilte.black("User does not exist, yet"));
+                        var newUser = new User({
+                            provider    : "twitter",
+                            id          : profile.id,
+                            token       : token,
+                            username    : profile.username
+                            }
+                        );
+                        //Since newUser is a Mongoose schema from User, it has its own save method
+                        console.log("About to save user: ");
+                        newUser.save(function(err, newUser, numAffected) {
+                            if (err) {
+                                console.log("Error when saving new user: ");
+                                console.error(err);
+                            }
+                            console.log("Num affected: " + numAffected);
+                            return callback(null, newUser);
+                        });
+                    }
+                }
+            ); 
+        });
+
+    }));
+
+
+// The Yelp settings must be defined BEFORE require()ing the routes, as the routes use those settings.
+console.log(chalk.bgYellow.black("Loading routes..."));
+var routes = require('./routes/index');
+var users = require('./routes/users');
 
 // view engine setup
 console.log(chalk.bgYellow.black("Loading view engine and views..."));

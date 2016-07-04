@@ -143,10 +143,13 @@ $(function () {
             liDescDiv.addClass("desc-div");
             liDescDiv.text(listingDesc);
             
-            var patronsDiv = $("</div></div>");
+            var patronsDiv = $("<div></div>");
+            patronsDiv.addClass("patrons-div");
             patronsDiv.text("Patron info here");
             
             liListingDescDiv.append(liRatingDiv).append(liDescDiv);
+            console.log("Appending patrons div");
+            liListingDescDiv.append(patronsDiv);
             
             cell.append(lnDiv).append(hr).append(liDiv).append(liListingDescDiv);
             

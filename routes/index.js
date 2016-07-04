@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var passport = require('passport');
 var Yelp = require('yelp');
 
 var yelp = new Yelp({
@@ -17,6 +18,36 @@ router.get('/', function (req, res, next) {
         }
         res.send(html);
     });
+});
+
+router.get('/auth/twitter', function (req, res, next) {
+    req.session.cburl = req.query.cbHash;
+    passport.authenticate('twitter', function (err, user, info) {
+        if (err) {
+            return next(err);
+        }
+        if (!user) {
+            return res.redirect('/login');
+        }
+    })(req, res, next);
+});
+
+router.get('/auth/twitter/callback', passport.authenticate('twitter', {
+	successRedirect : '/authreturn',
+	failureRedirect : '/'
+}));
+
+router.get('/authreturn', function(req, res) {
+    console.log("Auth return called...");
+    console.dir(req);
+    if (typeof req.session.cbHash !== "undefined" && req.session.cbHash.length > 0) {
+        res.redirect("/" + req.session.cbHash); //This preceding slash is required so the redirect will not be relative to '/authreturn'
+        
+        res.end(); //End this request since the browser will make a seperate request for the page we are redirecting to
+    }
+    else {
+        res.redirect('/');
+    }
 });
 
 router.post('/search', function(req, res, next) {
