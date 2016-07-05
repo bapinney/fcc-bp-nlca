@@ -140,7 +140,7 @@ $(function () { //Document Ready
         $("#results-table tbody").empty();
 
         var resTable = $("#results-table");
-        for (var i = 0; i < 3; i++) {
+        for (var i = 0; i < 20; i++) {
             var listingName = res.businesses[i].name;
             var listingRating = res.businesses[i].rating;
             var listingImg = res.businesses[i].image_url;

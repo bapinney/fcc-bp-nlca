@@ -58,7 +58,7 @@ router.get('/auth/twitter/callback', passport.authenticate('twitter', {
 
 router.get('/authreturn', function(req, res) {
     console.log("Auth return called...");
-    console.dir(req);
+    //console.dir(req);
     if (typeof req.session.cbHash !== "undefined" && req.session.cbHash.length > 0) {
         res.redirect("/" + req.session.cbHash); //This preceding slash is required so the redirect will not be relative to '/authreturn'
         
@@ -78,26 +78,48 @@ router.get('/authreturn', function(req, res) {
 router.post('/imgoing', isAuthed, function (req, res) {
     console.log(chalk.green("Someone's going!"));
     var listingId = req.body.listingId;
-    var patron = new Patrons();
-    
-    patron.listingId = listingId;
-    var user = {provider: req.user.provider, 
-                id: req.user.id, 
-                username: req.user.username};
-    console.dir(user);
-    patron.patrons.push(user);
-    console.dir(patron);
-    patron.save(function(err) {
-        if (err) {
-            res.status(500);
-            console.error("Error while saving patron: " + err);
+    Patrons.findOne({"listingId": listingId}).then(
+        function(result) {
+            if (result === null) {
+                console.log(chalk.gray("Listing does not exist, yet..."));
+                var patron = new Patrons();    
+                patron.listingId = listingId;
+                var user = {provider: req.user.provider, 
+                            id: req.user.id, 
+                            username: req.user.username};
+                patron.patrons.push(user);
+                patron.save(function(err) {
+                    if (err) {
+                        res.status(500);
+                        console.error("Error while saving listing: " + err);
+                    }
+                    else {
+                        res.status(200);
+                        console.log("New listing w/ patron created without errors");
+                    }
+                });
+            }
+            else {
+                console.log(chalk.green("Listing already exists!"));
+                console.dir(result);
+                result._doc.patrons.push({provider: "fake", id: 12345, username: "foo"});
+                result.save(function(err) {
+                    if (err) {
+                        res.status(500);
+                        console.error("Error2 while saving listing: " + err);
+                    }
+                    else {
+                        res.status(200);
+                        console.log("Updated listing w/o errors");
+                    }
+                });
+            }
+        },
+        function(err) {
+            console.error(chalk.red("Error") + ": " + err.stack);
         }
-        else {
-            res.status(200);
-            console.log("Save called without errors");
-        }
-    });
-    
+    );
+        
 });
 
 router.post('/search', function(req, res, next) {
