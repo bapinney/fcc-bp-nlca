@@ -14,6 +14,7 @@ var passport = require('passport');
 var uuid = require('uuid');
 var TwitterStrategy = require('passport-twitter').Strategy;
 var Yelp = require('yelp');
+var User = require('./models/user.js'); //Mongoose 'User' model
 
 console.log(chalk.bgYellow.black("Loading settings..."));
 var port = process.env.PORT || 8080;
@@ -114,7 +115,7 @@ passport.use(new TwitterStrategy({
                         console.log(chalk.bgBlack.green("User found"));
                         return callback(null, user);
                     } else { //User does not exist
-                        console.log(chalk.bgWhilte.black("User does not exist, yet"));
+                        console.log(chalk.bgWhite.black("User does not exist, yet"));
                         var newUser = new User({
                             provider    : "twitter",
                             id          : profile.id,

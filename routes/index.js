@@ -1,7 +1,11 @@
 var express = require('express');
 var router = express.Router();
+var chalk = require('chalk');
 var passport = require('passport');
 var Yelp = require('yelp');
+var mongoose = require('mongoose');
+//Remember we are in the /routes directory, hence the "../"
+var Patrons = require('../models/patrons.js');
 
 var yelp = new Yelp({
     consumer_key: process.env.YELP_CONSUMER_KEY,
@@ -9,6 +13,16 @@ var yelp = new Yelp({
     token: process.env.YELP_TOKEN,
     token_secret: process.env.YELP_TOKEN_SECRET
 });
+
+function isAuthed(req, res, next) {
+    if (req.user) {
+        console.log("User is authenticated");
+        return next();
+    }
+    
+    res.status(401).send("Not authenticated");
+}
+
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
@@ -18,6 +32,11 @@ router.get('/', function (req, res, next) {
         }
         res.send(html);
     });
+});
+
+/* TODO: Remove after testing */
+router.get('/authcheck', isAuthed, function(req, res, next) {
+    res.send("Yep");
 });
 
 router.get('/auth/twitter', function (req, res, next) {
@@ -46,8 +65,39 @@ router.get('/authreturn', function(req, res) {
         res.end(); //End this request since the browser will make a seperate request for the page we are redirecting to
     }
     else {
-        res.redirect('/');
+        res.render('index', function (err, html) {
+            if (err) {
+                console.error(err);
+            }
+            res.send(html);
+        });
     }
+    
+});
+
+router.post('/imgoing', isAuthed, function (req, res) {
+    console.log(chalk.green("Someone's going!"));
+    var listingId = req.body.listingId;
+    var patron = new Patrons();
+    
+    patron.listingId = listingId;
+    var user = {provider: req.user.provider, 
+                id: req.user.id, 
+                username: req.user.username};
+    console.dir(user);
+    patron.patrons.push(user);
+    console.dir(patron);
+    patron.save(function(err) {
+        if (err) {
+            res.status(500);
+            console.error("Error while saving patron: " + err);
+        }
+        else {
+            res.status(200);
+            console.log("Save called without errors");
+        }
+    });
+    
 });
 
 router.post('/search', function(req, res, next) {

@@ -162,7 +162,7 @@ a {
     color: white;
     display: inline-flex;
     margin-left: 6px;
-    transition-duration: 500ms;
+    transition-duration: 250ms;
     transition-property: all;
     vertical-align: middle;
 }
