@@ -192,7 +192,7 @@ $(function () { //Document Ready
             var patronsButton = $("<button></button>");
             patronsButton.attr("data-listing-id", listingId);
             patronsButton.attr("data-button-type", "patrons");
-            patronsButton.text("Dummy text");
+            patronsButton.text("0 going");
             patronsDiv.append(patronsButton);
 
             liListingDescDiv.append(liRatingDiv).append(liDescDiv);
@@ -203,8 +203,10 @@ $(function () { //Document Ready
 
             row.append(cell);
 
-            resTable.append(row);
+            resTable.append(row);            
+            
         }
+
         
         //Register event listeners for these newly-created buttons
         $("button[data-button-type=patrons]").click(function (e) {
@@ -232,7 +234,42 @@ $(function () { //Document Ready
             });            
             console.log("Ow");
         });
+        
+                
+        fetchPatronCounts();
+        
     };
-
+    
+    var fetchPatronCounts = function() {
+        console.log("Fetching patron counts...");
+        //The listing IDs are in all the buttons.  So let's get those...
+        var listingIdObj = {};
+        var btns = $("button[data-listing-id]");
+        for (var i=0; i < btns.length; i++) {
+            listingIdObj[i] = btns[i].getAttribute("data-listing-id");
+        }
+        console.dir(listingIdObj);
+        $.ajax({
+            url: "/getPatronCounts",
+            data: listingIdObj,
+            method: "POST"
+        }).done(function(data) {
+            console.log("Finished.  DIRing data");
+            console.dir(data);
+            var dataLen = data.length;
+            for (var i=0; i < dataLen; i++) {
+                $("button[data-listing-id=" + data[i].listingId +"]").text(data[i].nPatrons + " going");
+            }
+        })
+    }
+    
+    window.addEventListener("hashchange", function() {
+        console.log("hash change");
+        if (document.location.hash == "" &&
+            $("#results-table tr").length > 0) 
+        {
+            $("#results-table tr").remove();
+        }
+    });
 
 });

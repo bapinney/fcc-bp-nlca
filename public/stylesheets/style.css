@@ -17,6 +17,15 @@ body {
     width: 1170px;
 }
 
+#title {
+    color: white;
+}
+
+#title:hover, #title:focus {
+    text-decoration: none;
+}
+
+
 @keyframes gpsFetch {
     0% { 
         box-shadow: 0px 0px 10px 10px hsla(200, 100%, 70%, 1);
@@ -95,14 +104,27 @@ body {
         text-shadow: 0px 0px 15px hsl(216, 100%, 41.2%);
     }
 }
+
+@keyframes teeter {
+    0% {
+        transform: rotate(15deg);
+    }
+    50% {
+        transform: rotate(-15deg);
+    }
+    100% {
+        transform: rotate(15deg);
+    }
+}
+
 .header-icon {
-    animation-duration: 60s;
-    animation-name: hues;
+    animation-duration: 60s, 22s;
+    animation-name: hues, teeter;
     animation-iteration-count: infinite;
     color: hsl(200, 100%, 70%);
     margin-left: 20px;
     text-shadow: 0px 0px 15px hsl(200, 100%, 41.2%);
-    transform: rotate(15deg);
+/*    transform: rotate(15deg);*/
 }
 #header-div h1 {
     text-shadow: 2px 2px 12px rgb(0,100,200);
@@ -117,10 +139,15 @@ body {
     margin-bottom: 5px;
 }
 #results-table {
+    background-color: rgba(0,0,0,0);
     border-radius: 10px;
     box-shadow: 0px 0px 10px 2px rebeccapurple;
     width: 100%;
 }
+#results-table tr:hover {
+    background-color: rgba(255,255,255,.1);
+}
+
 a {
     color: #00B7FF;
 }

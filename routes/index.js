@@ -75,11 +75,44 @@ router.get('/authreturn', function(req, res) {
     
 });
 
+router.post('/getPatronCounts', function(req, res) {
+    console.log(chalk.blue("getPatronCounts called!"));
+    console.log("Type of db: " + typeof db);
+    //console.dir(req);
+    
+    //This query works fine in Robomongo...
+    db.collection('fccnlca-patrons').aggregate(
+        [
+            {
+                $match: {
+                    "listingId": {$in: ["board-and-brew-carlsbad", "tap-in-tavern-san-marcos"]}
+                }
+            },
+            {
+                $project: { 
+                    "_id": 0,
+                    "listingId": 1, 
+                    "nPatrons": { 
+                        $size: "$patrons"
+                    }
+                }
+            }
+        ]
+    ).toArray(function(err, result) {
+       if (err) {
+           console.log(chalk.bgRed.white("The query generated an error."));
+       }
+        res.json(result);
+    });
+});
+
 router.post('/imgoing', isAuthed, function (req, res) {
     console.log(chalk.green("Someone's going!"));
     var listingId = req.body.listingId;
     Patrons.findOne({"listingId": listingId}).then(
         function(result) {
+            //console.log("Console DIRing result");
+            //console.dir(result);
             if (result === null) {
                 console.log(chalk.gray("Listing does not exist, yet..."));
                 var patron = new Patrons();    
@@ -100,19 +133,44 @@ router.post('/imgoing', isAuthed, function (req, res) {
                 });
             }
             else {
-                console.log(chalk.green("Listing already exists!"));
-                console.dir(result);
-                result._doc.patrons.push({provider: "fake", id: 12345, username: "foo"});
-                result.save(function(err) {
-                    if (err) {
-                        res.status(500);
-                        console.error("Error2 while saving listing: " + err);
+                console.log(chalk.green("Listing already exists!  Here are the current patrons..."));
+                console.log("There are " + result.patrons.length + " patron(s)");
+                console.log(result.patrons);
+                var userExists = false;
+                for (var i=0; i < result.patrons.length; i++) {
+                    if (
+                        result.patrons[i].provider == req.user.provider &&
+                        result.patrons[i].id       == req.user.id       &&
+                        result.patrons[i].username == req.user.username
+                       )
+                    {
+                        var userExists = true;
                     }
-                    else {
-                        res.status(200);
-                        console.log("Updated listing w/o errors");
-                    }
-                });
+                }
+                
+                if (userExists) {
+                    res.status(409).json({error: "Already exists."});
+                    console.log(chalk.yellow("User already exists in listing..."))
+                    return;
+                }
+                else {
+                    var patron = new Patrons();
+                    var user = {
+                        provider: req.user.provider, 
+                        id: req.user.id, 
+                        username: req.user.username
+                    };
+                    
+                    result.patrons.push(user);
+                    result.save().then(function(data) {
+                        console.log(chalk.green("Patron saved to existing listing"));
+                    })
+                    .catch(function(err) {
+                        console.error(chalk.red("Error while saving patron to existing listing: " + err));
+                    })
+                }
+                
+                
             }
         },
         function(err) {
@@ -144,12 +202,20 @@ router.post('/search', function(req, res, next) {
             res.json(data);
         })
         .catch(function(err) {
-           console.error(err); 
+            console.error(err);
+            res.json({error:err});
         });
     }
     else {
-        console.log("Query is a city/place");
-        //TODO: Add search for city/place
+        console.log("Query is a city/place (i.e., 'location')");
+        yelp.search({ term: 'bars', location: query})
+        .then(function(data) {
+            res.json(data);
+        })
+        .catch(function(err) {
+            console.error(err);
+            res.json({error: err});
+        })
     }
     
     
