@@ -124,7 +124,6 @@ body {
     color: hsl(200, 100%, 70%);
     margin-left: 20px;
     text-shadow: 0px 0px 15px hsl(200, 100%, 41.2%);
-/*    transform: rotate(15deg);*/
 }
 #header-div h1 {
     text-shadow: 2px 2px 12px rgb(0,100,200);
@@ -157,6 +156,15 @@ a {
     padding: 10px;
     text-align: center;
 }
+
+.patrons-div button.going { /* When someone clicks on the button to indicate they are going to a bar */
+    transition-duration: 5s;
+    box-shadow:
+        0px 0px 3px 3px white,
+        0px 0px 5px 3px yellow;
+    background-color: rgb(20, 150, 20);
+}
+
 #gps-icon {
     color: black;
     cursor: pointer;

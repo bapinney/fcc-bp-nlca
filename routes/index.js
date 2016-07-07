@@ -34,11 +34,6 @@ router.get('/', function (req, res, next) {
     });
 });
 
-/* TODO: Remove after testing */
-router.get('/authcheck', isAuthed, function(req, res, next) {
-    res.send("Yep");
-});
-
 router.get('/auth/twitter', function (req, res, next) {
     req.session.cburl = req.query.cbHash;
     passport.authenticate('twitter', function (err, user, info) {
@@ -149,8 +144,19 @@ router.post('/imgoing', isAuthed, function (req, res) {
                 }
                 
                 if (userExists) {
-                    res.status(409).json({error: "Already exists."});
+                    //If the user exists, then he/she has clicked the button again to indicate they are not going (anymore).  Remove the user from the array.  This can be done using $pull                    
                     console.log(chalk.yellow("User already exists in listing..."))
+                    console.log(chalk.blue("Removing user from patrons list..."));
+                    db.collection("fccnlca-patrons").update(
+                        {listingId: "board-and-brew-carlsbad"},
+                        {$pull: { patrons: { id: req.user.id }}},
+                        function(err, results) {
+                            if (err) {
+                                console.error(chalk.red("Error: " + err));
+                            }
+                            console.log("Results: " + results);
+                        }
+                    );
                     return;
                 }
                 else {

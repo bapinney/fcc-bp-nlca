@@ -228,6 +228,7 @@ $(function () { //Document Ready
                     if (jqxhr.status === 401) {
                         console.error("You are not signed in...");
                         sessionStorage.setItem("lastURL", window.location.href);
+                        sessionStorage.setItem("lastScrollY", window.scrollY);
                         window.location.href = "/auth/twitter";
                     }
                 }
@@ -235,7 +236,11 @@ $(function () { //Document Ready
             console.log("Ow");
         });
         
-                
+        if (sessionStorage.getItem("lastScrollY") !== null) {
+            console.log("ScrollY is not null");
+            window.scrollTo(0, sessionStorage.getItem("lastScrollY"));
+            sessionStorage.removeItem("lastScrollY");
+        }
         fetchPatronCounts();
         
     };
