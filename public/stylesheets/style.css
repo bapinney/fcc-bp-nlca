@@ -179,6 +179,12 @@ a {
     position: relative;
 }
 
+.rating-count {
+    font-size: 10px;
+    font-weight: 100;
+    margin-bottom: 5px;
+}
+
 #search-box {
     background-color: transparent;
     border-radius: 6px;
@@ -352,12 +358,11 @@ input[type="button"] {
 }
 
 .desc-div {
-    height: 50px;
+    margin-bottom: 10px;
 }
 
 .patrons-div {
-    bottom: 0;
-    position: absolute;
+    margin-bottom: 10px;
 }
 
 .patrons-div button {

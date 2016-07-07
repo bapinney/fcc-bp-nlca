@@ -138,11 +138,13 @@ $(function () { //Document Ready
     var displayResults = function (res) {
         //Remove any previous results before displaying new ones...
         $("#results-table tbody").empty();
-
+        
+        console.dir(res);
         var resTable = $("#results-table");
         for (var i = 0; i < 20; i++) {
             var listingName = res.businesses[i].name;
             var listingRating = res.businesses[i].rating;
+            var listingReviewCount = res.businesses[i].review_count;
             var listingImg = res.businesses[i].image_url;
             var listingDesc = res.businesses[i].snippet_text;
             var listingUrl = res.businesses[i].url;
@@ -178,6 +180,10 @@ $(function () { //Document Ready
             }
             liRatingI.addClass("star-img " + ratingClass);
             liRatingDiv.append(liRatingI);
+            
+            liRatingCountDiv = $("<div></div>");
+            liRatingCountDiv.addClass("rating-count");
+            liRatingCountDiv.text("(" + listingReviewCount + " review" + (listingDesc == 1 ? ")" : "s)"));
 
             var liListingDescDiv = $("<div></div>");
             liListingDescDiv.addClass("listing-desc");
@@ -195,7 +201,7 @@ $(function () { //Document Ready
             patronsButton.text("0 going");
             patronsDiv.append(patronsButton);
 
-            liListingDescDiv.append(liRatingDiv).append(liDescDiv);
+            liListingDescDiv.append(liRatingDiv).append(liRatingCountDiv).append(liDescDiv);
             console.log("Appending patrons div");
             liListingDescDiv.append(patronsDiv);
 
@@ -212,37 +218,42 @@ $(function () { //Document Ready
         $("button[data-button-type=patrons]").click(function (e) {
             console.dir(e.currentTarget.dataset);
             var listingId = e.currentTarget.dataset.listingId;
+            console.log("fooo");
             $.ajax({
                 url: "imgoing",
                 data: {
                     listingId: listingId
                 },
-                
-                type: "POST",
-                
-                dataType: "json",
-                
+                method: "POST",                
+                dataType: "json",                
                 complete: function(jqxhr, status) {
-                    console.dir(jqxhr.status);
-                    console.log("completeddd!!");
+                    console.log("Complete...");
                     if (jqxhr.status === 401) {
-                        console.error("You are not signed in...");
+                        console.error("You are not signed in... redirecting...");
                         sessionStorage.setItem("lastURL", window.location.href);
                         sessionStorage.setItem("lastScrollY", window.scrollY);
                         window.location.href = "/auth/twitter";
                     }
                 }
+            }).done(function(res) {
+                if (res.status == "added") {
+                    console.log("Added to listing.  Refreshing data...");
+                    $("button[data-listing-id=" + res.listingId + "]").addClass("going");
+                    fetchPatronCounts();
+                }
+                if (res.status == "removed") {
+                    console.log("Removed from listing.  Refreshing data...");
+                    $("button[data-listing-id=" + res.listingId + "]").removeClass("going");
+                    fetchPatronCounts();
+                }
             });            
-            console.log("Ow");
         });
         
         if (sessionStorage.getItem("lastScrollY") !== null) {
-            console.log("ScrollY is not null");
             window.scrollTo(0, sessionStorage.getItem("lastScrollY"));
             sessionStorage.removeItem("lastScrollY");
         }
-        fetchPatronCounts();
-        
+        fetchPatronCounts();        
     };
     
     var fetchPatronCounts = function() {

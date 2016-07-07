@@ -73,14 +73,23 @@ router.get('/authreturn', function(req, res) {
 router.post('/getPatronCounts', function(req, res) {
     console.log(chalk.blue("getPatronCounts called!"));
     console.log("Type of db: " + typeof db);
-    //console.dir(req);
+    console.dir(req);
+    
+    var queryArray = [];
+    
+    for (var prop in req.body) {
+        queryArray.push(req.body[prop]);
+    }
+    
+    console.log(chalk.inverse("queryArray"));
+    console.dir(queryArray);
     
     //This query works fine in Robomongo...
     db.collection('fccnlca-patrons').aggregate(
         [
             {
                 $match: {
-                    "listingId": {$in: ["board-and-brew-carlsbad", "tap-in-tavern-san-marcos"]}
+                    "listingId": {$in: queryArray}
                 }
             },
             {
@@ -122,7 +131,8 @@ router.post('/imgoing', isAuthed, function (req, res) {
                         console.error("Error while saving listing: " + err);
                     }
                     else {
-                        res.status(200);
+                        console.log(chalk.green("Patron saved to newly created listing"));
+                        res.json({listingId: listingId, status: "added"});
                         console.log("New listing w/ patron created without errors");
                     }
                 });
@@ -146,15 +156,16 @@ router.post('/imgoing', isAuthed, function (req, res) {
                 if (userExists) {
                     //If the user exists, then he/she has clicked the button again to indicate they are not going (anymore).  Remove the user from the array.  This can be done using $pull                    
                     console.log(chalk.yellow("User already exists in listing..."))
-                    console.log(chalk.blue("Removing user from patrons list..."));
+                    console.log(chalk.yellow("Removing user from patrons list..."));
                     db.collection("fccnlca-patrons").update(
-                        {listingId: "board-and-brew-carlsbad"},
+                        {listingId: listingId},
                         {$pull: { patrons: { id: req.user.id }}},
                         function(err, results) {
                             if (err) {
                                 console.error(chalk.red("Error: " + err));
                             }
                             console.log("Results: " + results);
+                            res.json({listingId: listingId, status: "removed"});
                         }
                     );
                     return;
@@ -170,6 +181,7 @@ router.post('/imgoing', isAuthed, function (req, res) {
                     result.patrons.push(user);
                     result.save().then(function(data) {
                         console.log(chalk.green("Patron saved to existing listing"));
+                        res.json({listingId: listingId, status: "added"});
                     })
                     .catch(function(err) {
                         console.error(chalk.red("Error while saving patron to existing listing: " + err));
