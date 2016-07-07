@@ -53,7 +53,6 @@ router.get('/auth/twitter/callback', passport.authenticate('twitter', {
 
 router.get('/authreturn', function(req, res) {
     console.log("Auth return called...");
-    //console.dir(req);
     if (typeof req.session.cbHash !== "undefined" && req.session.cbHash.length > 0) {
         res.redirect("/" + req.session.cbHash); //This preceding slash is required so the redirect will not be relative to '/authreturn'
         
@@ -71,18 +70,14 @@ router.get('/authreturn', function(req, res) {
 });
 
 router.post('/getPatronCounts', function(req, res) {
-    console.log(chalk.blue("getPatronCounts called!"));
-    console.log("Type of db: " + typeof db);
-    console.dir(req);
-    
     var queryArray = [];
     
     for (var prop in req.body) {
         queryArray.push(req.body[prop]);
     }
     
-    console.log(chalk.inverse("queryArray"));
-    console.dir(queryArray);
+    //console.log(chalk.inverse("queryArray"));
+    //console.dir(queryArray);
     
     //This query works fine in Robomongo...
     db.collection('fccnlca-patrons').aggregate(
@@ -115,8 +110,6 @@ router.post('/imgoing', isAuthed, function (req, res) {
     var listingId = req.body.listingId;
     Patrons.findOne({"listingId": listingId}).then(
         function(result) {
-            //console.log("Console DIRing result");
-            //console.dir(result);
             if (result === null) {
                 console.log(chalk.gray("Listing does not exist, yet..."));
                 var patron = new Patrons();    
@@ -140,7 +133,7 @@ router.post('/imgoing', isAuthed, function (req, res) {
             else {
                 console.log(chalk.green("Listing already exists!  Here are the current patrons..."));
                 console.log("There are " + result.patrons.length + " patron(s)");
-                console.log(result.patrons);
+                //console.log(result.patrons);
                 var userExists = false;
                 for (var i=0; i < result.patrons.length; i++) {
                     if (
@@ -164,7 +157,7 @@ router.post('/imgoing', isAuthed, function (req, res) {
                             if (err) {
                                 console.error(chalk.red("Error: " + err));
                             }
-                            console.log("Results: " + results);
+                            //console.log("Results: " + results);
                             res.json({listingId: listingId, status: "removed"});
                         }
                     );
@@ -200,9 +193,9 @@ router.post('/imgoing', isAuthed, function (req, res) {
 
 router.post('/search', function(req, res, next) {
     var query = req.body.query;
-    console.log("Parsing query: " + query);
+    //console.log("Parsing query: " + query);
     if (/^\d{5}$|^\d{5}-\d{4}$/.test(query)) {
-        console.log("Query is a zip code (5 or 9)");
+        //console.log("Query is a zip code (5 or 9)");
         yelp.search({ term: 'bars', location: query})
         .then(function(data) {
             console.log("At then");
@@ -213,7 +206,7 @@ router.post('/search', function(req, res, next) {
         });
     }
     else if (/^(\+|\-)?([0-8]\d|90|[0-9])(\.\d{1,10}),\ ?(\+|\-)?(1[0-7]\d|\|180|\d\d?)(\.\d{1,10})?$/.test(query)) {
-        console.log("Query is a lat, long");
+        //console.log("Query is a lat, long");
         // https://www.yelp.com/developers/documentation/v2/search_api#searchGC
         yelp.search({ term: 'bars', ll: query})
         .then(function(data) {
@@ -225,7 +218,7 @@ router.post('/search', function(req, res, next) {
         });
     }
     else {
-        console.log("Query is a city/place (i.e., 'location')");
+        //console.log("Query is a city/place (i.e., 'location')");
         yelp.search({ term: 'bars', location: query})
         .then(function(data) {
             res.json(data);

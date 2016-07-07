@@ -35,7 +35,7 @@ $(function () { //Document Ready
     
     $('[data-toggle="tooltip"]').tooltip();
     if ("geolocation" in navigator) {
-        console.log("Geolocation supported");
+        //console.log("Geolocation supported");
         $("#gps-icon")[0].style.display = "inline";
     }
 
@@ -61,7 +61,7 @@ $(function () { //Document Ready
             $("#get-location").fadeOut();
             //console.log(position.coords.latitude, position.coords.longitude);
             currentPos = position.coords.latitude.toFixed(5) + ", " + position.coords.longitude.toFixed(5);
-            console.log(currentPos);
+            //console.log(currentPos);
             $("#search-box")[0].value = currentPos;
 
             //Fire the input trigger for the search box since it will not fire if data is programmatically inputted.  
@@ -202,7 +202,7 @@ $(function () { //Document Ready
             patronsDiv.append(patronsButton);
 
             liListingDescDiv.append(liRatingDiv).append(liRatingCountDiv).append(liDescDiv);
-            console.log("Appending patrons div");
+            //console.log("Appending patrons div");
             liListingDescDiv.append(patronsDiv);
 
             cell.append(lnDiv).append(hr).append(liDiv).append(liListingDescDiv);
@@ -216,9 +216,8 @@ $(function () { //Document Ready
         
         //Register event listeners for these newly-created buttons
         $("button[data-button-type=patrons]").click(function (e) {
-            console.dir(e.currentTarget.dataset);
+            //console.dir(e.currentTarget.dataset);
             var listingId = e.currentTarget.dataset.listingId;
-            console.log("fooo");
             $.ajax({
                 url: "imgoing",
                 data: {
@@ -227,7 +226,7 @@ $(function () { //Document Ready
                 method: "POST",                
                 dataType: "json",                
                 complete: function(jqxhr, status) {
-                    console.log("Complete...");
+                    //console.log("Complete...");
                     if (jqxhr.status === 401) {
                         console.error("You are not signed in... redirecting...");
                         sessionStorage.setItem("lastURL", window.location.href);
@@ -237,12 +236,12 @@ $(function () { //Document Ready
                 }
             }).done(function(res) {
                 if (res.status == "added") {
-                    console.log("Added to listing.  Refreshing data...");
+                    //console.log("Added to listing.  Refreshing data...");
                     $("button[data-listing-id=" + res.listingId + "]").addClass("going");
                     fetchPatronCounts();
                 }
                 if (res.status == "removed") {
-                    console.log("Removed from listing.  Refreshing data...");
+                    //console.log("Removed from listing.  Refreshing data...");
                     $("button[data-listing-id=" + res.listingId + "]").removeClass("going");
                     fetchPatronCounts();
                 }
@@ -257,7 +256,7 @@ $(function () { //Document Ready
     };
     
     var fetchPatronCounts = function() {
-        console.log("Fetching patron counts...");
+        //console.log("Fetching patron counts...");
         //The listing IDs are in all the buttons.  So let's get those...
         var listingIdObj = {};
         var btns = $("button[data-listing-id]");
@@ -270,8 +269,6 @@ $(function () { //Document Ready
             data: listingIdObj,
             method: "POST"
         }).done(function(data) {
-            console.log("Finished.  DIRing data");
-            console.dir(data);
             var dataLen = data.length;
             for (var i=0; i < dataLen; i++) {
                 $("button[data-listing-id=" + data[i].listingId +"]").text(data[i].nPatrons + " going");
@@ -280,7 +277,7 @@ $(function () { //Document Ready
     }
     
     window.addEventListener("hashchange", function() {
-        console.log("hash change");
+        //console.log("hash change");
         if (document.location.hash == "" &&
             $("#results-table tr").length > 0) 
         {
