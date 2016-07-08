@@ -17,7 +17,7 @@ $(function () { //Document Ready
                 }
         })
         .done(function (res) {
-            console.dir(res);
+            //console.dir(res);
             displayResults(res);
         });
     }
@@ -139,7 +139,7 @@ $(function () { //Document Ready
         //Remove any previous results before displaying new ones...
         $("#results-table tbody").empty();
         
-        console.dir(res);
+        //console.dir(res);
         var resTable = $("#results-table");
         for (var i = 0; i < 20; i++) {
             var listingName = res.businesses[i].name;
@@ -190,7 +190,13 @@ $(function () { //Document Ready
 
             var liDescDiv = $("<div></div>");
             liDescDiv.addClass("desc-div");
-            liDescDiv.text(listingDesc);
+            var liDescSpan = $("<span></span>");
+            liDescSpan.text(listingDesc + " ");
+            var liReadMore = document.createElement("a");
+            liReadMore.href = listingUrl;
+            liReadMore.innerHTML = "(read more) ";
+            liDescDiv.append(liDescSpan);
+            liDescDiv.append(liReadMore);
 
             var patronsDiv = $("<div></div>");
             patronsDiv.addClass("patrons-div");
@@ -263,7 +269,7 @@ $(function () { //Document Ready
         for (var i=0; i < btns.length; i++) {
             listingIdObj[i] = btns[i].getAttribute("data-listing-id");
         }
-        console.dir(listingIdObj);
+        //console.dir(listingIdObj);
         $.ajax({
             url: "/getPatronCounts",
             data: listingIdObj,
